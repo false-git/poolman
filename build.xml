@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<project name="poolman" default="test" basedir="..">
+  <!-- properties -->
+  <property name="src" value="src" />
+  <property name="build" value="classes" />
+  <property name="apidoc" value="docs" />
+  <property name="dist" value="dist" />
+  <property name="report" value="report" />
+
+  <path id="project.class.path">
+    <pathelement path="${build}/"/>
+    <pathelement path="${java.class.path}/"/>
+  </path>
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+    <mkdir dir="${report}"/>
+    <mkdir dir="${apidoc}"/>
+  </target>
+
+  <!-- javac -->
+  <target name="compile" depends="init">
+	<javac srcdir="${src}" destdir="${build}" encoding="UTF-8" depend="yes" deprecation="true" debug="true">
+	  <classpath refid="project.class.path"/>
+	</javac>
+  </target>
+
+  <target name="test" depends="compile">
+    <junit printsummary="yes">
+      <classpath refid="project.class.path"/>
+      <formatter type="xml"/>
+      <batchtest fork="yes" todir="${report}">
+        <fileset dir="${src}">
+          <include name="test/**/*Test.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+    <junitreport todir="${report}">
+      <fileset dir="${report}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${report}"/>
+    </junitreport>
+  </target>
+
+  <!-- javadoc -->
+  <target name="doc">
+    <javadoc sourcepath="${src}" destdir="${apidoc}" packagenames="net.*">
+     <classpath refid="project.class.path" />
+    </javadoc>
+  </target>
+
+  <!-- jar -->
+  <target name="dist" depends="compile">
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist}"/>
+    <jar jarfile="${dist}/poolman.jar" basedir="${build}" includes="net/**"/>
+  </target>
+
+  <target name="clean">
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+    <delete dir="${report}"/>
+  </target>
+</project>
+

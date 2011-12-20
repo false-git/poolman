@@ -1,0 +1,3 @@
+2002年頃に JDK 1.3 の Proxy と WeakReference の練習で書いた ConnectionPool。
+
+詳細は、http://www.wizard-limit.net/tools/poolman/ 参照。
